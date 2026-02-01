@@ -8,35 +8,46 @@
 
   <h1 id="title">Loading...</h1>
   <div id="content"></div>
+<script>
+  // ✅ FULL Base44 App ID (important)
+  const APP_ID = "697f9674e6e01fbb0528e450";
 
-  <script>
-    // Base44 app id from your screenshot:
-    const APP_ID = "697f9674e6e01fbb0";
+  // ✅ Entity name must match Base44 exactly (case-sensitive)
+  const ENTITY = "Content";
 
-    // Entity name is "content" (from your dropdown)
-    const ENTITY = "content";
+  // ✅ Correct Base44 read endpoint
+  const ENDPOINT = `https://app.base44.com/api/apps/${APP_ID}/entities/${ENTITY}`;
 
-    // Base44 endpoint pattern shown in your API examples
-    const ENDPOINT = `https://app.base44.com/api/apps/${APP_ID}/${ENTITY}`;
+  async function loadContent() {
+    const res = await fetch(ENDPOINT);
 
-    async function loadContent() {
-      const res = await fetch(ENDPOINT); // no api_key if public read is enabled
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-      const data = await res.json();
-
-      // Handle common response shapes
-      const items = data.items ?? data.data ?? data;
-      const first = Array.isArray(items) ? items[0] : items;
-
-      document.getElementById("out").textContent = JSON.stringify(data, null, 2);
-      document.getElementById("title").textContent = first?.title ?? "(no title)";
-      document.getElementById("content").textContent = first?.text ?? "";
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
     }
 
-    loadContent().catch(err => {
-      document.getElementById("out").textContent = `Error: ${err.message}`;
-    });
-  </script>
+    const data = await res.json();
+
+    // Base44 usually returns { items: [...] }
+    const items = data.items || [];
+    const first = items[0];
+
+    document.getElementById("out").textContent =
+      JSON.stringify(data, null, 2);
+
+    document.getElementById("title").textContent =
+      first?.title || "No title found";
+
+    document.getElementById("content").innerHTML =
+      first?.text || "";
+  }
+
+  loadContent().catch(err => {
+    document.getElementById("out").textContent =
+      "Error: " + err.message;
+  });
+</script>
+
+
+  
 </body>
 </html>
