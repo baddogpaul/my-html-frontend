@@ -9,42 +9,51 @@
   <h1 id="title">Loading...big CHANGES</h1>
   <div id="content"></div>
 <script>
-  // ✅ FULL Base44 App ID (important)
-  const APP_ID = "697f9674e6e01fbb0528e450";
+  // ===============================
+  // Base44 → HTML live connection
+  // ===============================
 
-  // ✅ Entity name must match Base44 exactly (case-sensitive)
+  const APP_ID = "697f9674e6e01fbb0528e450";
   const ENTITY = "Content";
 
-  // ✅ Correct Base44 read endpoint
-  const ENDPOINT = `https://app.base44.com/api/apps/${APP_ID}/entities/${ENTITY}`;
+  const ENDPOINT =
+    `https://app.base44.com/api/apps/${APP_ID}/entities/${ENTITY}`;
 
   async function loadContent() {
-    const res = await fetch(ENDPOINT);
+    try {
+      const res = await fetch(ENDPOINT);
 
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        throw new Error("HTTP " + res.status);
+      }
+
+      const data = await res.json();
+
+      // Base44 returns an array directly
+      const items = Array.isArray(data)
+        ? data
+        : data.items || [];
+
+      const first = items.find(i => i.published === true);
+
+      // debug output
+      document.getElementById("out").textContent =
+        JSON.stringify(data, null, 2);
+
+      // render content
+      document.getElementById("title").textContent =
+        first?.title || "No title found";
+
+      document.getElementById("content").innerHTML =
+        first?.text || "";
     }
-
-    const data = await res.json();
-
-    // Base44 usually returns { items: [...] }
-    const items = data.items || [];
-    const first = items[0];
-
-    document.getElementById("out").textContent =
-      JSON.stringify(data, null, 2);
-
-    document.getElementById("title").textContent =
-      first?.title || "No title found";
-
-    document.getElementById("content").innerHTML =
-      first?.text || "";
+    catch (err) {
+      document.getElementById("out").textContent =
+        "ERROR: " + err.message;
+    }
   }
 
-  loadContent().catch(err => {
-    document.getElementById("out").textContent =
-      "Error: " + err.message;
-  });
+  loadContent();
 </script>
 
 
