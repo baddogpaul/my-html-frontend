@@ -4,7 +4,6 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <pre id="out">Loading…</pre>
 
   <h1 id="title">Loading...big CHANGES</h1>
   <div id="content"></div>
@@ -36,9 +35,7 @@
 
       const first = items.find(i => i.published === true);
 
-      // debug output
-      document.getElementById("out").textContent =
-        JSON.stringify(data, null, 2);
+   
 
       // render content
       document.getElementById("title").textContent =
@@ -57,7 +54,6 @@
 </script>
 
 
-  <p>llllP</p>
 
   
 </body>
