@@ -5,6 +5,16 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+<pre id="out">Loading…</pre>
+
+<script>
+  async function loadContent() {
+    const res = await fetch("/api/content?type=posts");
+    const data = await res.json();
+    document.getElementById("out").textContent = JSON.stringify(data, null, 2);
+  }
+  loadContent();
+</script>
 
 <h1 id="title">Loading...</h1>
 <div id="content"></div>
