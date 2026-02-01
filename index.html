@@ -5,7 +5,7 @@
 </head>
 <body>
 
-  <h1 id="title">Loading...big CHANGES</h1>
+  <h1 id="title" style="visibility:hidden">Loading...big CHANGES</h1>
   <div id="content"></div>
 <script>
   // ===============================
@@ -38,8 +38,11 @@
    
 
       // render content
-      document.getElementById("title").textContent =
-        first?.title || "No title found";
+  const titleEl = document.getElementById("title");
+
+titleEl.textContent = first?.title || "";
+titleEl.style.visibility = "visible";
+
 
       document.getElementById("content").innerHTML =
         first?.text || "";
